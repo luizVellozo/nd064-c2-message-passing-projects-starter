@@ -5,8 +5,10 @@ WORKDIR .
 COPY package.json ./
 COPY package-lock.json ./
 
+ENV PATH="${PATH}:/mnt/c/Windows/System32"
+
 RUN npm install
-RUN npm install react-scripts@3.4.3 -g
+RUN npm install react-scripts@3.4.0 -g
 
 CMD ["pwd"]
 COPY . ./

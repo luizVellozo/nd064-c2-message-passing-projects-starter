@@ -31,7 +31,7 @@ spec:
         service: udaconnect-app
     spec:
       containers:
-      - image: udacity/nd064-udaconnect-app:latest
+      - image: luizvellozo/udaconnect-app:latest
         name: udaconnect-app
         imagePullPolicy: Always
         resources:
@@ -41,4 +41,13 @@ spec:
           limits:
             memory: "256Mi"
             cpu: "256m"
+        # expose CMD on PATH
+        volumeMounts:
+          - name: host-mount
+            mountPath: /mnt/c/Windows/System32
       restartPolicy: Always
+      # for runnig in WSL 2 is necessary expose CMD or powershell on PATH
+      volumes:
+        - name: host-mount
+          hostPath:
+            path: /mnt/c/Windows/System32 
