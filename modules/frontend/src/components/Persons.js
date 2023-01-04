@@ -4,12 +4,16 @@ import Connection from "./Connection";
 class Persons extends Component {
   constructor(props) {
     super(props);
+  
+    this.host = process.env.REACT_APP_HOST ? process.env.REACT_APP_HOST : 'localhost';
+
     // TODO: endpoint should be abstracted into a config variable
-    this.endpoint_url = "http://localhost:30001/api/persons";
+    this.endpoint_url = `http://${this.host}:30001/api/persons`;
     this.state = {
       persons: [],
       display: null,
     };
+
   }
 
   componentDidMount() {

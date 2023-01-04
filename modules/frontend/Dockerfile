@@ -5,6 +5,7 @@ WORKDIR .
 COPY package.json ./
 COPY package-lock.json ./
 
+# for runnig in WSL 2 is necessary expose CMD or powershell on PATH
 ENV PATH="${PATH}:/mnt/c/Windows/System32"
 
 RUN npm install
