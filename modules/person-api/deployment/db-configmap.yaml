@@ -6,4 +6,4 @@ data:
   DB_HOST: "postgres-person"
   DB_PORT: "5432"
 metadata:
-  name: person-db-env
+  name: db-person

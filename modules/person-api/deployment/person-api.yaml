@@ -31,14 +31,14 @@ spec:
         service: udaconnect-person-api
     spec:
       containers:
-      - image: luizvellozo/nd064-udaconnect-person-api:latest
+      - image: luizvellozo/udaconnect-person-api:latest
         name: udaconnect-person-api
         imagePullPolicy: Always
         env:
         - name: DB_USERNAME
           valueFrom:
             configMapKeyRef:
-              name: person-db-env
+              name: db-person
               key: DB_USERNAME
         - name: DB_PASSWORD
           valueFrom:
@@ -48,16 +48,16 @@ spec:
         - name: DB_NAME
           valueFrom:
             configMapKeyRef:
-              name: person-db-env
+              name: db-person
               key: DB_NAME
         - name: DB_HOST
           valueFrom:
             configMapKeyRef:
-              name: person-db-env
+              name: db-person
               key: DB_HOST
         - name: DB_PORT
           valueFrom:
             configMapKeyRef:
-              name: person-db-env
+              name: db-person
               key: DB_PORT
       restartPolicy: Always
