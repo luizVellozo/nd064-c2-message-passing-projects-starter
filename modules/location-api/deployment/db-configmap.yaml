@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  DB_USERNAME: "ct_location"
+  DB_NAME: "location"
+  DB_HOST: "postgres-location"
+  DB_PORT: "5432"
+metadata:
+  name: db-location

@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: UdaConnect Location API
+  version: 0.1.0
+paths:
+  /api/locations:
+    get:
+      responses:
+        "200":
+          description: Success
+      operationId: get_locations_resource
+      tags:
+        - UdaConnect Location API
+    post:
+      responses:
+        '200':
+          description: Successfully retrieved location informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/location'
+      operationId: post_locations_resource
+      tags:
+        - UdaConnect Location API
+  "/api/locations/{location_id}":
+    parameters:
+      - in: path
+        description: Unique ID for a given Location
+        name: location_id
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Retrieve location in UdaConnect
+      operationId: get_location_resource
+      description: retrieve location informations in UdaConnect
+      responses:
+        '200':
+          description: Successfully retrieved location informations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/location'
+      tags:
+        - UdaConnect Location API
+tags:
+  - name: UdaConnect Location API
+    description: Locations for geolocation.
+servers:
+  - url: /
+components:
+  schemas:
+    location:
+      type: object
+      required:
+        - longitude
+        - latitude
+        - creation_time
+        - id
+        - person_id
+      properties:
+        id:
+          type: integer
+          example: 1
+        person_id:
+          type: integer
+          example: 1
+        creation_time:
+          type: string
+          format: date-time
+          example: '2017-07-21T17:32:28Z'
+        longitude:
+          type: number
+          example: 10.0
+        latitude:
+          type: number
+          example: 12.0
