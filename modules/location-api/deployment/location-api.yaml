@@ -60,4 +60,14 @@ spec:
             configMapKeyRef:
               name: db-location
               key: DB_PORT
+        - name: KAFKA_URL
+          valueFrom:
+            configMapKeyRef:
+              name: kafka-env
+              key: KAFKA_URL
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: kafka-env
+              key: KAFKA_TOPIC
       restartPolicy: Always
