@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: UdaConnect Location API
-  version: 0.1.0
+  version: "0.1.0"
 paths:
   /api/locations:
     get:
@@ -13,12 +13,14 @@ paths:
         - UdaConnect Location API
     post:
       responses:
-        '200':
-          description: Successfully retrieved location informations
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/location'
+        "200":
+          description: Success
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/location'
       operationId: post_locations_resource
       tags:
         - UdaConnect Location API
@@ -47,7 +49,8 @@ tags:
   - name: UdaConnect Location API
     description: Locations for geolocation.
 servers:
-  - url: /
+  - description: Location API for udaconnect project
+    url: http://localhost:30003/
 components:
   schemas:
     location:
@@ -68,10 +71,10 @@ components:
         creation_time:
           type: string
           format: date-time
-          example: '2017-07-21T17:32:28Z'
+          example: '2017-07-21T17:32:28'
         longitude:
           type: number
-          example: 10.0
+          example: 35.0585136
         latitude:
           type: number
-          example: 12.0
+          example: -106.57

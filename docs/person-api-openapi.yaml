@@ -3,6 +3,9 @@ info:
   description: Query person information in UdaConnect.
   version: "0.1.0"
   title: Person API
+servers:
+  - description: Person API for udaconnect project
+    url: http://localhost:30002/
 paths:
   /api/person/{person_id}:
     get:

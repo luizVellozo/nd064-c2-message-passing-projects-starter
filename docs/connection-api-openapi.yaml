@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  version: "0.1.0"
+  title: 'Connection endpoints Api '
+  description: This  API retrieve all connections for a person
+servers:
+  -  description: Connection API for udaconnect project
+     url: http://localhost:30002/
+paths:
+ /api-connection/persons/{personId}/connection:
+    get:
+      summary: gets connections by person id
+      description: |
+        Gets connections by person id
+      parameters:
+      - name: personId
+        in: path
+        description:  Unique Person ID
+        required: true
+        schema:
+          type: integer
+      - name: start_date
+        in: query
+        description:  Enter start date
+        required: true
+        schema:
+          type: string
+          format: date   
+      - name: end_date
+        in: query
+        description:  Enter end date
+        required: true
+        schema:
+          type: string
+          format: date
+      responses:
+        "200":
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Connection'
+                  
+components:
+  schemas:
+    Connection:
+      type: object
+      properties:
+        location: 
+          $ref: '#/components/schemas/Location'
+        person:
+          $ref: '#/components/schemas/Person'
+      
+    Person:
+      required:
+      - company_name
+      - first_name
+      - id
+      - last_name
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        first_name:
+          type: string
+          example: Ayman
+        last_name:
+          type: string
+          example: Moawad
+        company_name:
+          type: string
+          example: BDC
+          
+    Location:
+      required:
+      - id
+      - person_id
+      - creation_time
+      - latitude
+      - longtitude
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        creation_time:
+          type: string
+          example: '2020-01-05T10:37:06'
+        latitude:
+          type: number
+          example: 35.0585136
+        longtitude:
+          type: number
+          example: -106.57
