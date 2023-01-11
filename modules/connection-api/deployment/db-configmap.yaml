@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  DB_USERNAME: "ct_connection"
+  DB_NAME: "connection"
+  DB_HOST: "postgres-connection"
+  DB_PORT: "5432"
+metadata:
+  name: db-connection

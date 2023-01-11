@@ -1,0 +1,2 @@
+insert into public.connection (person_id, exposed_person_id, latitude, longitude, creation_time) values (1, 5, 35.058564, -106.5721845, '2020-08-18 10:37:06.000000');
+insert into public.connection (person_id, exposed_person_id, latitude, longitude, creation_time) values (5, 1, 35.058564, -106.5721845, '2020-08-15 10:37:06.000000');
