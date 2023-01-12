@@ -21,14 +21,14 @@ paths:
           type: integer
       - name: start_date
         in: query
-        description:  Enter start date
+        description: Enter start date
         required: true
         schema:
           type: string
-          format: date   
+          format: date
       - name: end_date
         in: query
-        description:  Enter end date
+        description: Enter end date
         required: true
         schema:
           type: string
