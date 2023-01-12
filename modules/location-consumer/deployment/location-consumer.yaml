@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: location-consumer
+  name: location-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: location-consumer
+  template:
+    metadata:
+      labels:
+        service: location-consumer
+    spec:
+      containers:
+      - image: luizvellozo/udaconnect-location-consumer:latest
+        name: location-consumer
+        imagePullPolicy: Always
+        env:
+        - name: DB_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-connection
+              key: DB_USERNAME
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: connection-db-secret
+              key: DB_PASSWORD
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: db-connection
+              key: DB_NAME
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: db-connection
+              key: DB_HOST
+        - name: DB_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: db-connection
+              key: DB_PORT
+        - name: DB_USERNAME_LOCATION
+          valueFrom:
+            configMapKeyRef:
+              name: db-location
+              key: DB_USERNAME
+        - name: DB_PASSWORD_LOCATION
+          valueFrom:
+            secretKeyRef:
+              name: location-db-secret
+              key: DB_PASSWORD
+        - name: DB_NAME_LOCATION
+          valueFrom:
+            configMapKeyRef:
+              name: db-location
+              key: DB_NAME
+        - name: DB_HOST_LOCATION
+          valueFrom:
+            configMapKeyRef:
+              name: db-location
+              key: DB_HOST
+        - name: DB_PORT_LOCATION
+          valueFrom:
+            configMapKeyRef:
+              name: db-location
+              key: DB_PORT
+        - name: KAFKA_URL
+          valueFrom:
+            configMapKeyRef:
+              name: kafka-env
+              key: KAFKA_URL
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: kafka-env
+              key: KAFKA_TOPIC
+      restartPolicy: Always
