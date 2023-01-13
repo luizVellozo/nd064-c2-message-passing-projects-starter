@@ -1,0 +1,11 @@
+
+user location-client.py for send test grpc location event
+test location event:
+(
+  person_id=9,
+  longitude=-106.5721845,
+  latitude=35.058564,
+)
+
+
+python ../modules/location-grpc/location-client.py
