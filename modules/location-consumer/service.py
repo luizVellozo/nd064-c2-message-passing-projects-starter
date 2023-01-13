@@ -7,6 +7,8 @@ from datetime import datetime
 from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
 from shapely.geometry.point import Point
+from geoalchemy2.functions import ST_AsText, ST_Point
+from sqlalchemy.sql import text
 from sqlalchemy import BigInteger, Float, Column, Date, DateTime, ForeignKey, Integer, String
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -29,8 +31,10 @@ DB_HOST_LOCATION = os.environ["DB_HOST_LOCATION"]
 DB_PORT_LOCATION = os.environ["DB_PORT_LOCATION"]
 DB_NAME_LOCATION = os.environ["DB_NAME_LOCATION"]
 
-logging.info('kafka_url : ', kafka_url)
-logging.info('kafka_topic : ', kafka_topic)
+logging.basicConfig(level=logging.INFO)
+
+logging.info('kafka_url : %s', kafka_url)
+logging.info('kafka_topic : %s', kafka_topic)
 
 consumer = KafkaConsumer(kafka_topic, bootstrap_servers=[kafka_url])
 
@@ -88,15 +92,6 @@ class Location(Base):
 
 def process_location_connections(location):
     
-    new_location = Location()
-    new_location.person_id = location["person_id"]
-    new_location.creation_time = location["creation_time"]
-    new_location.coordinate = ST_Point(location["latitude"], location["longitude"])
-    new_location.set_wkt_with_coords(location["latitude"], location["longitude"])
-
-    location_db.add(new_location)
-    location_db.commit()
-
     query = text(
         """
     SELECT  person_id, id, ST_X(coordinate), ST_Y(coordinate), creation_time
@@ -107,11 +102,17 @@ def process_location_connections(location):
     )
 
     query_data = {
-        "person_id": new_location.person_id,
-        "longitude": new_location.longitude,
-        "latitude": new_location.latitude,
+        "person_id": location["person_id"],
+        "longitude": location["longitude"],
+        "latitude": location["latitude"],
         "meters": 5
     }
+
+    new_location = Location()
+    new_location.person_id = location["person_id"]
+    new_location.creation_time = datetime.now()
+    new_location.coordinate = ST_Point(location["latitude"], location["longitude"])
+    new_location.set_wkt_with_coords(location["latitude"], location["longitude"])
 
     connections: List[ConnectionP] = []
     for (
@@ -120,7 +121,7 @@ def process_location_connections(location):
         exposed_lat,
         exposed_long,
         exposed_time,
-    ) in session.execute(query, query_data):
+    ) in location_db.execute(query, query_data):
         connection = ConnectionP(
             person_id=new_location.person_id,
             exposed_person_id=exposed_person_id,
@@ -130,9 +131,12 @@ def process_location_connections(location):
             
         )
         connections.append(connection)
-
+    
     connection_db.bulk_save_objects(connections)
     connection_db.commit()
+
+    location_db.add(new_location)
+    location_db.commit()
 
     logging.info('Connections created!')
 
@@ -140,4 +144,9 @@ def process_location_connections(location):
 for location in consumer:
     message = location.value.decode('utf-8')
     location_message = json.loads(message)
-    process_location_connections(location_message)
+    try:
+        print(location_message)
+        process_location_connections(location_message)
+    except Exception as error:
+        logging.error('Error message  %s', location_message)
+        logging.exception(error)
