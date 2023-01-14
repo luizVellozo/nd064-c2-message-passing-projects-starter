@@ -1,4 +1,5 @@
 # Usage: pass in the DB container ID as the argument
+# use sh scripts/run_db_command.sh $(kubectl get pods | grep -i "postgres" | awk '{print $1}')
 
 # Set database configurations
 export CT_DB_USERNAME=ct_location

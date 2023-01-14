@@ -76,25 +76,45 @@ Type `exit` to exit the virtual OS and you will find yourself back in your compu
 Afterwards, you can test that `kubectl` works by running a command like `kubectl describe services`. It should not return any errors.
 
 ### Steps
-1. `kubectl apply -f deployment/db-configmap.yaml` - Set up environment variables for the pods
-2. `kubectl apply -f deployment/db-secret.yaml` - Set up secrets for the pods
-3. `kubectl apply -f deployment/postgres.yaml` - Set up a Postgres database running PostGIS
-4. `kubectl apply -f deployment/udaconnect-api.yaml` - Set up the service and deployment for the API
-5. `kubectl apply -f deployment/udaconnect-app.yaml` - Set up the service and deployment for the web app
-6. `sh scripts/run_db_command.sh <POD_NAME>` - Seed your database against the `postgres` pod. (`kubectl get pods` will give you the `POD_NAME`)
+
+The application was divided into 6 components/services, so we need to run the following commands to run them from the cluster:
+
+1. `kubectl apply -f modules/person-api/deployment` 
+2. `kubectl apply -f modules/connection-api/deployment` 
+3. `kubectl apply -f modules/location-api/deployment` 
+4. `kubectl apply -f modules/location-grpc/deployment` 
+5. `kubectl apply -f modules/location-consumer/deployment`
+6. `kubectl apply -f modules/frontend/deployment` - Set up the service and deployment for the web app
+
+for person-api, connection-api and location-api, its necessary run scrips to database
+7. `sh scripts/run_db_command.sh <POD_NAME>` - Seed your database against the `postgres` pod. (`kubectl get pods` will give you the `POD_NAME`)
 
 Manually applying each of the individual `yaml` files is cumbersome but going through each step provides some context on the content of the starter project. In practice, we would have reduced the number of steps by running the command against a directory to apply of the contents: `kubectl apply -f deployment/`.
 
-Note: The first time you run this project, you will need to seed the database with dummy data. Use the command `sh scripts/run_db_command.sh <POD_NAME>` against the `postgres` pod. (`kubectl get pods` will give you the `POD_NAME`). Subsequent runs of `kubectl apply` for making changes to deployments or services shouldn't require you to seed the database again!
+Note: The first time you run each service project, you will need to seed the database with dummy data. Use the command `sh scripts/run_db_command.sh <POD_NAME>` against the `postgres` pod. (`kubectl get pods` will give you the `POD_NAME`). Subsequent runs of `kubectl apply` for making changes to deployments or services shouldn't require you to seed the database again!
 
 ### Verifying it Works
-Once the project is up and running, you should be able to see 3 deployments and 3 services in Kubernetes:
-`kubectl get pods` and `kubectl get services` - should both return `udaconnect-app`, `udaconnect-api`, and `postgres`
+Once the project is up and running, you should be able to see deployments and services in Kubernetes: kubectl get pods and kubectl get services.
 
+![pods](https://github.com/luizVellozo/nd064-c2-message-passing-projects-starter/blob/master/docs/pods_screenshot.png)
 
 These pages should also load on your web browser:
-* `http://localhost:30001/` - OpenAPI Documentation
+person-api
+* `http://localhost:30002/` - OpenAPI Documentation person-api
+* `http://localhost:30002/api/` - Base path for API
+
+connection-api
+* `http://localhost:30001/` - OpenAPI Documentation connection-api
 * `http://localhost:30001/api/` - Base path for API
+
+location-api
+* `http://localhost:30003/` - OpenAPI Documentation location-api
+* `http://localhost:30003/api/` - Base path for API
+
+location-grpc
+* `http://localhost:30004/` - grpc server
+  use `python /modules/location-grpc/location-client.py` to test grpc interface
+
 * `http://localhost:30000/` - Frontend ReactJS Application
 
 #### Deployment Note
@@ -141,11 +161,15 @@ To manually connect to the database, you will need software compatible with Post
 * CLI users will find [psql](http://postgresguide.com/utilities/psql.html) to be the industry standard.
 * GUI users will find [pgAdmin](https://www.pgadmin.org/) to be a popular open-source solution.
 
+
+
 ## Architecture Diagrams
 Your architecture diagram should focus on the services and how they talk to one another. For our project, we want the diagram in a `.png` format. Some popular free software and tools to create architecture diagrams:
 1. [Lucidchart](https://www.lucidchart.com/pages/)
 2. [Google Docs](docs.google.com) Drawings (In a Google Doc, _Insert_ - _Drawing_ - _+ New_)
 3. [Diagrams.net](https://app.diagrams.net/)
+
+![pods](https://github.com/luizVellozo/nd064-c2-message-passing-projects-starter/blob/master/docs/architecture_design.png)
 
 ## Tips
 * We can access a running Docker container using `kubectl exec -it <pod_id> sh`. From there, we can `curl` an endpoint to debug network issues.
