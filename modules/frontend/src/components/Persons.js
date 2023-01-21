@@ -6,8 +6,7 @@ class Persons extends Component {
     super(props);
   
     this.host = process.env.REACT_APP_HOST ? process.env.REACT_APP_HOST : 'localhost';
-    
-    // TODO: endpoint should be abstracted into a config variable
+
     this.endpoint_url = `http://${this.host}:30002/api/persons`;
     this.state = {
       persons: [],
